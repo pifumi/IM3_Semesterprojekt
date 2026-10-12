@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fast alle haben Strom. Fast.</title>
+    <meta name="description" content="Datastory: Der Anteil der Menschen mit Strom steigt in Afrika, die Zahl der Menschen ohne Strom sinkt aber nicht.">
+
+    <!-- Schriften: Newsreader (Titel und Text), Josefin Sans (Beschriftungen) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&display=swap">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ===================================================================
+         Einstieg: Foto mit Titel
+         =================================================================== -->
+    <header class="hero">
+        <picture>
+            <source media="(max-width: 700px)" srcset="image/hero-mobil.jpg">
+            <img class="hero-bild" src="image/hero.jpg" alt="Landstrasse mit Kleinbus, daneben eine Stromleitung und Kamele im trockenen Gras">
+        </picture>
+        <div class="hero-text">
+            <h1>Fast alle haben Strom. Fast.</h1>
+            <p class="lead">In Afrika haben so viele Menschen Strom wie nie zuvor. Trotzdem leben dort heute mehr Menschen ohne Strom als im Jahr 2000.</p>
+        </div>
+        <p class="bildnachweis">Foto: Ewien van Bergeijk-Kwant, Unsplash</p>
+    </header>
+
+    <main>
+
+        <!-- ===============================================================
+             Kapitel 1: Die Welt
+             =============================================================== -->
+        <section class="kapitel" id="welt">
+            <h2>Die Welt hat es fast geschafft</h2>
+            <p>
+                Im Jahr <span data-fakt="jahrStart">…</span> lebten weltweit
+                <span data-fakt="weltStart">…</span> Menschen ohne Strom.
+                <span data-fakt="jahrEnde">…</span> sind es noch <span data-fakt="weltEnde">…</span>
+            </p>
+
+            <!-- Die Balken baut script.js aus den Daten -->
+            <div class="weltbalken" id="weltbalken" role="img" aria-label="Menschen ohne Strom weltweit, davon in Afrika"></div>
+
+            <p>
+                Doch die Erfolgsgeschichte hat einen blinden Fleck. Von allen Menschen,
+                die <span data-fakt="jahrEnde">…</span> noch ohne Strom leben, leben
+                <span data-fakt="anteilAfrikaEnde">…</span> in Afrika.
+                Im Jahr <span data-fakt="jahrStart">…</span> waren es erst <span data-fakt="anteilAfrikaStart">…</span>.
+            </p>
+        </section>
+
+        <!-- ===============================================================
+             Kapitel 2: Die Lichtkarte (Scrollytelling)
+             Links laufen die Textschritte vorbei, rechts bleibt die Karte
+             stehen und wechselt das Jahr.
+             =============================================================== -->
+        <section class="kapitel scrolly" id="karte">
+            <div class="scrolly-grafik">
+                <div class="karte-kopf">
+                    <h2>Afrika holt auf, in Prozent</h2>
+                    <div class="regler">
+                        <label for="year">Jahr <strong id="year-label">2024</strong></label>
+                        <input type="range" id="year" min="2000" max="2024" step="1" value="2024">
+                    </div>
+                    <p class="summe welt" id="summary-world"></p>
+                    <p class="summe" id="summary"></p>
+                </div>
+                <div class="map" id="map"></div>
+                <div class="legend" id="legend"></div>
+            </div>
+
+            <div class="scrolly-schritte">
+                <div class="schritt" data-jahr="2000">
+                    <p>
+                        Im Jahr <span data-fakt="jahrStart">…</span> hatten
+                        <span data-fakt="afrikaProzentStart">…</span> der Menschen in Afrika Strom.
+                        Nur in <span data-fakt="ueberHalbStart">…</span> von 54 Ländern hatte mehr als die Hälfte der Menschen Strom.
+                    </p>
+                </div>
+                <div class="schritt" data-jahr="2012">
+                    <p>
+                        2012 sind es <span data-fakt="afrikaProzent2012">…</span>.
+                        Äthiopien hat seinen Anteil in dieser Zeit mehr als verdoppelt,
+                        von <span data-fakt="aethiopienProzentStart">…</span> auf <span data-fakt="aethiopienProzent2012">…</span>.
+                    </p>
+                </div>
+                <div class="schritt" data-jahr="2024">
+                    <p>
+                        <span data-fakt="jahrEnde">…</span> haben <span data-fakt="afrikaProzentEnde">…</span>
+                        der Menschen Strom, in <span data-fakt="ueberHalbEnde">…</span> von 54 Ländern ist es mehr als die Hälfte.
+                        Kenia kletterte von <span data-fakt="keniaProzentStart">…</span>
+                        auf <span data-fakt="keniaProzentEnde">…</span>.
+                    </p>
+                    <p class="hinweis">Mit dem Regler kannst du jedes Jahr selbst ansehen. Fahre über ein Land oder tippe darauf, um seine Zahlen zu sehen.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===============================================================
+             Kapitel 3: Die Wende
+             =============================================================== -->
+        <section class="kapitel" id="wende">
+            <h2>Zählt man Menschen, kippt das Bild</h2>
+            <p>
+                <span data-fakt="jahrEnde">…</span> lebten in Afrika
+                <span data-fakt="afrikaOhneEnde">…</span> Menschen ohne Strom.
+                Das sind <span data-fakt="afrikaDifferenz">…</span> mehr als im Jahr <span data-fakt="jahrStart">…</span>.
+            </p>
+            <figure class="diagramm">
+                <div class="diagramm-flaeche hoch">
+                    <canvas id="chart-trend" aria-label="Liniendiagramm: Menschen ohne Strom in Afrika pro Jahr" role="img"></canvas>
+                </div>
+                <figcaption>Menschen ohne Strom in Afrika, in Millionen. Gestrichelt: der Stand von <span data-fakt="jahrStart">…</span>.</figcaption>
+            </figure>
+            <p>
+                Der Grund ist das Bevölkerungswachstum. Zwischen <span data-fakt="jahrStart">…</span> und
+                <span data-fakt="jahrEnde">…</span> kamen in den 54 Ländern
+                <span data-fakt="bevoelkerungPlus">…</span> Menschen dazu.
+                Erst seit dem Höchststand <span data-fakt="spitzeJahr">…</span> sinkt die Zahl, und nur langsam.
+            </p>
+        </section>
+
+        <!-- ===============================================================
+             Kapitel 4: Wo das Problem liegt
+             =============================================================== -->
+        <section class="kapitel" id="problem">
+            <h2>Wo das Problem liegt</h2>
+            <p>
+                <span data-fakt="top3Anteil">…</span> aller Menschen ohne Strom in Afrika leben in nur drei Ländern:
+                <span data-fakt="top3Namen">…</span>.
+            </p>
+            <figure class="diagramm">
+                <div class="diagramm-flaeche hoch">
+                    <canvas id="chart-top10" aria-label="Balkendiagramm: die zehn Länder mit den meisten Menschen ohne Strom" role="img"></canvas>
+                </div>
+                <figcaption>Die zehn Länder mit den meisten Menschen ohne Strom, <span data-fakt="jahrEnde">…</span>, in Millionen.</figcaption>
+            </figure>
+            <p>
+                In Nigeria stieg der Anteil mit Strom von <span data-fakt="nigeriaProzentStart">…</span>
+                auf <span data-fakt="nigeriaProzentEnde">…</span>. Gleichzeitig wuchs die Bevölkerung
+                von <span data-fakt="nigeriaBevStart">…</span> auf <span data-fakt="nigeriaBevEnde">…</span> Menschen.
+            </p>
+        </section>
+
+        <!-- ===============================================================
+             Kapitel 5: Gegenbeispiel Kenia
+             =============================================================== -->
+        <section class="kapitel" id="kenia">
+            <h2>Es geht auch anders</h2>
+            <p>
+                Kenia zeigt, dass der Ausbau schneller sein kann als das Wachstum. Die Bevölkerung stieg
+                von <span data-fakt="keniaBevStart">…</span> auf <span data-fakt="keniaBevEnde">…</span>
+                Trotzdem sank die Zahl der Menschen ohne Strom von <span data-fakt="keniaOhneStart">…</span>
+                auf <span data-fakt="keniaOhneEnde">…</span>
+            </p>
+            <figure class="diagramm">
+                <div class="diagramm-flaeche">
+                    <canvas id="chart-kenia" aria-label="Liniendiagramm: Menschen ohne Strom in Kenia und Nigeria" role="img"></canvas>
+                </div>
+                <figcaption>Menschen ohne Strom in Kenia und Nigeria, in Millionen.</figcaption>
+            </figure>
+        </section>
+
+        <!-- ===============================================================
+             Kapitel 6: Schluss
+             =============================================================== -->
+        <section class="kapitel schluss" id="schluss">
+            <p class="grosse-zahl"><span data-fakt="afrikaOhneEndeZahl">…</span> <span class="einheit">Millionen</span></p>
+            <p class="schluss-text">
+                Menschen in Afrika leben <span data-fakt="jahrEnde">…</span> ohne Strom,
+                obwohl der Anteil mit Strom auf <span data-fakt="afrikaProzentEnde">…</span> gestiegen ist.
+                Wer nur Prozente zählt, sieht ein Problem, das kleiner wird.
+                Wer Menschen zählt, sieht eines, das sich kaum bewegt.
+            </p>
+        </section>
+
+        <!-- ===============================================================
+             Kapitel 7: Daten und Methode
+             =============================================================== -->
+        <section class="kapitel methode" id="methode">
+            <h2>Daten und Methode</h2>
+            <ul>
+                <li>Quelle: Weltbank, Indikatoren EG.ELC.ACCS.ZS (Anteil der Bevölkerung mit Strom) und SP.POP.TOTL (Bevölkerung). Die Weltzahl ist das Weltbank-Aggregat «World».</li>
+                <li>Auswahl: die 54 Staaten Afrikas, Jahre <span data-fakt="jahrStart">…</span> bis <span data-fakt="jahrEnde">…</span>.</li>
+                <li>Menschen ohne Strom = Bevölkerung × (100 − Anteil mit Strom) / 100.</li>
+                <li>Lücken: Für <span data-fakt="luecken">…</span> fehlt der Anteil mit Strom. Diese Länder fehlen in den Summen dieser Jahre.</li>
+                <li>«Zugang zu Strom» sagt nichts darüber, wie zuverlässig oder wie teuer der Strom ist.</li>
+            </ul>
+            <p class="status" id="status">Daten werden geladen …</p>
+        </section>
+
+    </main>
+
+    <!-- Tooltip für die Karte -->
+    <div class="tooltip" id="tooltip" hidden></div>
+
+    <!-- Chart.js zuerst, dann unser Skript -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

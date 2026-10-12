@@ -1,0 +1,536 @@
+/* =========================================================================
+   Fast alle haben Strom. Fast.
+   Gestaltung: Nacht und Licht. Dunkler Grund wie ein Wald bei Nacht,
+   feine Kreide-Linien, und Strom erscheint als warmes Lampenlicht.
+   ========================================================================= */
+
+/* --- Farben und Schriften an einem Ort ---------------------------------- */
+:root {
+    --nacht: #1b1f18;        /* Hintergrund */
+    --waldboden: #262b21;    /* etwas hellere Flächen */
+    --kreide: #ece4d0;       /* Text und feine Linien */
+    --gras: #a8a58f;         /* ruhiger Text */
+    --licht: #f2c14e;        /* der einzige Akzent: Strom */
+    --linie: rgba(236, 228, 208, 0.18);
+
+    /* Farbstufen der Karte: dunkel = wenig Strom, hell = viel Strom */
+    --stufe-1: #3b3a2b;
+    --stufe-2: #6b5d33;
+    --stufe-3: #a07f3a;
+    --stufe-4: #d3a544;
+    --stufe-5: #f7d77a;
+    --keine-daten: #2d3128;
+    --anderes-land: #22261e;
+
+    --serif: "Newsreader", Georgia, "Times New Roman", serif;
+    --sans: "Josefin Sans", "Futura", "Century Gothic", sans-serif;
+
+    --spalte: 36rem;         /* Textbreite, unter 80 Zeichen */
+    --breit: 60rem;          /* Breite für Diagramme */
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+}
+
+body {
+    margin: 0;
+    background: var(--nacht);
+    color: var(--kreide);
+    font-family: var(--serif);
+    font-size: 1.1875rem;   /* 19px */
+    line-height: 1.6;
+    font-optical-sizing: auto;
+    -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2 {
+    font-weight: 300;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    margin: 0 0 1.5rem;
+}
+
+h1 {
+    font-size: clamp(2.75rem, 7vw, 5.5rem);
+}
+
+h2 {
+    font-size: clamp(2rem, 4.2vw, 3rem);
+}
+
+p {
+    margin: 0 0 1.25rem;
+}
+
+/* Zahlen aus der Datenbank: gleich breite Ziffern, leicht hervorgehoben */
+[data-fakt] {
+    font-variant-numeric: lining-nums tabular-nums;
+    color: #fff6df;
+}
+
+a {
+    color: var(--licht);
+}
+
+:focus-visible {
+    outline: 2px solid var(--licht);
+    outline-offset: 3px;
+}
+
+/* =========================================================================
+   Einstieg mit Foto
+   ========================================================================= */
+.hero {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+}
+
+.hero-bild {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 70% center;   /* die Stromleitung rechts bleibt sichtbar */
+}
+
+/* Verlauf nach unten in die Nacht, damit der Titel lesbar ist */
+.hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(27, 31, 24, 0) 35%, rgba(27, 31, 24, 0.75) 72%, var(--nacht) 100%);
+}
+
+.hero-text {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: var(--breit);
+    margin: 0 auto;
+    padding: 0 1.5rem 5rem;
+}
+
+.hero-text .lead {
+    max-width: 30rem;
+    font-size: 1.375rem;
+    line-height: 1.45;
+}
+
+.bildnachweis {
+    position: absolute;
+    z-index: 1;
+    right: 1.5rem;
+    bottom: 1rem;
+    margin: 0;
+    font-size: 0.8125rem;
+    color: var(--gras);
+}
+
+/* =========================================================================
+   Kapitel
+   ========================================================================= */
+.kapitel {
+    max-width: var(--spalte);
+    margin: 0 auto;
+    padding: 7rem 1.5rem 0;
+}
+
+.status {
+    font-size: 0.875rem;
+    color: var(--gras);
+}
+
+/* --- Kapitel 1: Weltbalken ---------------------------------------------- */
+.weltbalken {
+    margin: 2.5rem 0;
+}
+
+.weltzeile {
+    margin-bottom: 1.75rem;
+}
+
+.weltzeile-text {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.25rem 1rem;
+    font-size: 1rem;
+    color: var(--gras);
+    margin-bottom: 0.5rem;
+}
+
+.weltzeile-text strong {
+    font-weight: 500;
+    color: var(--kreide);
+}
+
+/* Ein Balken = alle Menschen ohne Strom weltweit, unterteilt in Afrika und Rest */
+.balken {
+    display: flex;
+    gap: 2px;                 /* schmale Lücke zwischen den zwei Teilen */
+    height: 1.75rem;
+}
+
+.balken-afrika {
+    background: var(--licht);
+    border-radius: 3px 0 0 3px;
+}
+
+.balken-rest {
+    background: rgba(236, 228, 208, 0.22);
+    border-radius: 0 3px 3px 0;
+}
+
+.balken-legende {
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.9375rem;
+    color: var(--gras);
+}
+
+.balken-legende i {
+    display: inline-block;
+    width: 0.8rem;
+    height: 0.8rem;
+    margin-right: 0.4rem;
+    border-radius: 2px;
+    vertical-align: -0.05rem;
+}
+
+/* =========================================================================
+   Kapitel 2: Lichtkarte mit Scrollytelling
+   ========================================================================= */
+.kapitel.scrolly {
+    max-width: 72rem;
+    display: grid;
+    grid-template-columns: minmax(16rem, 22rem) 1fr;
+    gap: 3rem;
+}
+
+/* Die Karte steht rechts und bleibt beim Scrollen stehen */
+.scrolly-grafik {
+    grid-column: 2;
+    grid-row: 1;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1.5rem 0;
+}
+
+.scrolly-schritte {
+    grid-column: 1;
+    grid-row: 1;
+    padding: 40vh 0 30vh;
+}
+
+/* Jeder Textschritt braucht Platz, damit die Karte Zeit zum Wechseln hat */
+.schritt {
+    min-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    opacity: 0.35;
+    transition: opacity 0.4s;
+}
+
+.schritt.aktiv {
+    opacity: 1;
+}
+
+.schritt .hinweis {
+    font-size: 0.9375rem;
+    color: var(--gras);
+}
+
+.karte-kopf h2 {
+    margin-bottom: 1rem;
+}
+
+.regler {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 1rem;
+}
+
+.regler strong {
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+}
+
+.regler input {
+    flex: 1;
+    accent-color: var(--licht);
+}
+
+.summe {
+    margin: 0.75rem 0 0;
+    font-size: 1.125rem;
+}
+
+.summe.welt {
+    font-size: 0.9375rem;
+    color: var(--gras);
+}
+
+.summe.welt + .summe {
+    margin-top: 0.15rem;
+}
+
+.map {
+    margin-top: 1rem;
+}
+
+.map svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 64vh;
+}
+
+/* Alle Flächen der Karte: feine Kreide-Linien wie auf einer Wanderkarte */
+.map path {
+    fill: var(--anderes-land);
+    stroke: rgba(236, 228, 208, 0.35);
+    stroke-width: 0.25;
+    transition: fill 0.5s;
+}
+
+.map path.country {
+    cursor: pointer;
+}
+
+.map path.country:hover {
+    stroke: var(--kreide);
+    stroke-width: 0.7;
+}
+
+/* Beschriftungen mit Hinweislinie (wie auf einer Wanderkarte) */
+.map .beschriftung line {
+    stroke: var(--kreide);
+    stroke-width: 0.35;
+}
+
+.map .beschriftung circle {
+    fill: var(--kreide);
+}
+
+.map .beschriftung text {
+    fill: var(--kreide);
+    font-family: var(--sans);
+    font-size: 5.6px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+.map .beschriftung .wert {
+    font-family: var(--serif);
+    font-size: 5.4px;
+    letter-spacing: 0;
+    text-transform: none;
+    fill: var(--gras);
+}
+
+.legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1rem;
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+    color: var(--gras);
+}
+
+.legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.legend i {
+    width: 0.8rem;
+    height: 0.8rem;
+    border-radius: 2px;
+    outline: 1px solid rgba(236, 228, 208, 0.25);
+}
+
+.tooltip {
+    position: fixed;
+    z-index: 10;
+    pointer-events: none;
+    background: var(--waldboden);
+    color: var(--kreide);
+    border: 1px solid var(--linie);
+    border-radius: 4px;
+    padding: 0.6rem 0.8rem;
+    font-size: 0.9375rem;
+    line-height: 1.45;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+}
+
+.tooltip strong {
+    font-weight: 500;
+}
+
+/* =========================================================================
+   Diagramme
+   ========================================================================= */
+.diagramm {
+    margin: 2.5rem 0;
+}
+
+.diagramm-flaeche {
+    position: relative;     /* Chart.js braucht das für responsive Grösse */
+    height: 20rem;
+}
+
+.diagramm-flaeche.hoch {
+    height: 24rem;
+}
+
+.diagramm figcaption {
+    margin-top: 0.75rem;
+    font-size: 0.9375rem;
+    color: var(--gras);
+}
+
+/* Diagramme dürfen breiter sein als der Text */
+@media (min-width: 62rem) {
+    .diagramm {
+        margin-left: -6rem;
+        margin-right: -6rem;
+    }
+}
+
+/* =========================================================================
+   Schluss und Methode
+   ========================================================================= */
+.schluss {
+    padding-top: 9rem;
+}
+
+.grosse-zahl {
+    margin: 0 0 1rem;
+    font-size: clamp(4.5rem, 16vw, 9rem);
+    font-weight: 300;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    color: var(--licht);
+}
+
+.grosse-zahl .einheit {
+    display: block;
+    font-size: 0.32em;
+    letter-spacing: 0;
+    line-height: 1.2;
+    margin-top: 0.4rem;
+}
+
+.schluss-text {
+    font-size: 1.375rem;
+    line-height: 1.5;
+}
+
+.methode {
+    padding-bottom: 6rem;
+    font-size: 1rem;
+    color: var(--gras);
+}
+
+.methode h2 {
+    font-size: 1.75rem;
+    color: var(--kreide);
+}
+
+.methode ul {
+    padding-left: 1.1rem;
+    margin: 0 0 1.5rem;
+}
+
+.methode li {
+    margin-bottom: 0.6rem;
+}
+
+/* =========================================================================
+   Handy: Karte oben fixiert, Textschritte laufen darüber
+   ========================================================================= */
+@media (max-width: 760px) {
+    body {
+        font-size: 1.125rem;
+    }
+
+    .kapitel {
+        padding-top: 5rem;
+    }
+
+    .kapitel.scrolly {
+        display: block;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .scrolly-grafik {
+        height: 100svh;
+        padding: 1rem 1.25rem;
+        background: var(--nacht);
+        justify-content: flex-start;
+    }
+
+    .map svg {
+        max-height: 52svh;
+    }
+
+    /* Schritte schieben sich als Karten über die Karte */
+    .scrolly-schritte {
+        position: relative;
+        z-index: 2;
+        margin-top: -60svh;
+        padding: 0 1.25rem 20svh;
+    }
+
+    .schritt {
+        min-height: 85svh;
+        justify-content: flex-end;
+        opacity: 1;
+    }
+
+    .schritt p {
+        background: rgba(38, 43, 33, 0.94);
+        border: 1px solid var(--linie);
+        border-radius: 4px;
+        padding: 1rem 1.1rem;
+        margin: 0 0 0.5rem;
+    }
+
+    /* Hinweislinien sind auf dem Handy zu klein, dort hilft der Tooltip */
+    .map .beschriftung {
+        display: none;
+    }
+
+    .hero-text {
+        padding-bottom: 4rem;
+    }
+}
+
+/* Die grosse Zahl bleibt im Licht, auch wenn sie aus der Datenbank kommt */
+.grosse-zahl [data-fakt] {
+    color: inherit;
+}

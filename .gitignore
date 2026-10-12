@@ -13,7 +13,7 @@
 # und danach das Passwort aendern – in der Historie steht es weiterhin.
 
 # Kein Muster mit Slash: gilt damit in jedem Unterordner.
-*config.php
+config.php
 secrets.php
 *.env
 .env
